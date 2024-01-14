@@ -26,4 +26,6 @@ The output in save in current directory
 
 [Nuclei](https://github.com/projectdiscovery/nuclei)
 
+[ffuf](https://github.com/ffuf/ffuf)
+
 

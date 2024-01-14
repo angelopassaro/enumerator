@@ -1,4 +1,8 @@
 #!/bin/bash
+
+#TODO define an working dir
+
+
 echo "Start finding subdomains ..."
 cat $1 | assetfinder --subs-only > $(pwd)/subdomains-1.txt &
 findomain -q -f $1 > $(pwd)/subdomains-2.txt &
@@ -12,8 +16,7 @@ uniq -u $(pwd)/tmp.txt > $(pwd)/subdomains.txt
 rm $(pwd)/tmp.txt $(pwd)/subdomains-*
 
 #Out of scope
-if [ -n "$2" ]; then
-    echo "Exist"
+if [ -n $2 ]; then
     mv $(pwd)/subdomains.txt $(pwd)/no-scope-subdomains.txt
     grep -v -i -f "$2" $(pwd)/no-scope-subdomains.txt > $(pwd)/subdomains.txt
 fi
@@ -56,9 +59,29 @@ wait # wait for aqutone
 
 #check if there is some default page to scan. TODO add dir enumeration
 cd $(pwd)/html/ 
-gf nginx_error    | awk '{print $1}' | awk -F "/" '{print $2}' | sed 's/com__.*/com/' | sed 's/__/\:\/\//g' | sed 's/_/\./g'  >> $(pwd)/urls_to_scan.txt
-gf default_server | awk '{print $1}' | awk -F "/" '{print $2}' | sed 's/com__.*/com/' | sed 's/__/\:\/\//g' | sed 's/_/\./g'  >> $(pwd)/urls_to_scan.txt
+gf nginx_error    | awk '{print $1}' | awk -F "/" '{print $2}' | sed 's/com__.*/com/' | sed 's/__/\:\/\//g' | sed 's/_/\./g'  >> $(pwd)/../urls_to_scan.txt
+gf default_server | awk '{print $1}' | awk -F "/" '{print $2}' | sed 's/com__.*/com/' | sed 's/__/\:\/\//g' | sed 's/_/\./g'  >> $(pwd)/../urls_to_scan.txt
 cd -
+
+
+# Run ffuf on default pages
+urls_to_scan="$(pwd)/urls_to_scan.txt"
+
+if [ ! -s "$urls_to_scan" ]; then
+    echo "No urls found"
+    exit
+fi
+
+for line in $(cat "$urls_to_scan"); do
+    if [ -z "$3" ]; then
+        echo "No wordlist"
+        exit
+    elif [ -n "$4" ]; then
+        ffuf -w "$3" -u "$line/FUZZ" -H "$4" -ac -ach -o "${line:8}.enum"
+    else
+        ffuf -w "$3" -u "$line/FUZZ" -ac -ach -o "${line:8}.enum"
+    fi
+done
 
 echo "Done"
 exit
