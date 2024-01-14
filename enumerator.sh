@@ -16,7 +16,7 @@ uniq -u $(pwd)/tmp.txt > $(pwd)/subdomains.txt
 rm $(pwd)/tmp.txt $(pwd)/subdomains-*
 
 #Out of scope
-if [ -n $2 ]; then
+if [ -n "$2" ]; then
     mv $(pwd)/subdomains.txt $(pwd)/no-scope-subdomains.txt
     grep -v -i -f "$2" $(pwd)/no-scope-subdomains.txt > $(pwd)/subdomains.txt
 fi
