@@ -56,8 +56,8 @@ wait # wait for aqutone
 
 #check if there is some default page to scan. TODO add dir enumeration
 cd $(pwd)/html/ 
-gf nginx_error    | sed 's/com__.*/com/' | sed 's/__/\:\/\//g' | sed 's/_/\./g'  >> $(pwd)/urls_to_scan.txt
-gf default_server | sed 's/com__.*/com/' | sed 's/__/\:\/\//g' | sed 's/_/\./g'  >> $(pwd)/urls_to_scan.txt
+gf nginx_error    | awk '{print $1}' | awk -F "/" '{print $2}' | sed 's/com__.*/com/' | sed 's/__/\:\/\//g' | sed 's/_/\./g'  >> $(pwd)/urls_to_scan.txt
+gf default_server | awk '{print $1}' | awk -F "/" '{print $2}' | sed 's/com__.*/com/' | sed 's/__/\:\/\//g' | sed 's/_/\./g'  >> $(pwd)/urls_to_scan.txt
 cd -
 
 echo "Done"
