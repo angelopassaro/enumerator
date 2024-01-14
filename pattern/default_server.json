@@ -1,0 +1,4 @@
+{
+    "flags": "-HanrEi",
+    "pattern": "Welcome to Nginx|It works"
+}

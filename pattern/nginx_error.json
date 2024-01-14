@@ -1,0 +1,4 @@
+{
+    "flags": "-HanriE",
+    "pattern": "404 Not Found.*nginx|nginx.*404 Not Found"
+}

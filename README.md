@@ -20,7 +20,7 @@ The output in save in current directory
 
 [Aquatone](https://github.com/michenriksen/aquatone)
 
-[fff](https://github.com/tomnomnom/fff)
+[gf](https://github.com/tomnomnom/gf)
 
 [Shodan](https://github.com/achillean/shodan-python)
 

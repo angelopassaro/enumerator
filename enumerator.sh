@@ -24,8 +24,8 @@ cat $(pwd)/subdomains.txt | httprobe -c 80 --prefer-https > $(pwd)/urls.txt
 echo "Found `wc -l urls.txt` active domains"
 
 echo "Running aquatone ..."
-cat $(pwd)/urls.txt | aquatone -silent &
-cat $(pwd)/urls.txt  | fff -d 1 -S -o sites  &
+cat $(pwd)/urls.txt | aquatone -ports large -silent &
+#cat $(pwd)/urls.txt  | fff -d 1 -S -o sites  & #aqutone already dump the html
 
 echo "Finding error pages ..."
 for line in $(cat $1);do 
@@ -52,6 +52,13 @@ done
 rm tmp.txt
 
 
-wait
+wait # wait for aqutone
+
+#check if there is some default page to scan. TODO add dir enumeration
+cd $(pwd)/html/ 
+gf nginx_error    | sed 's/com__.*/com/' | sed 's/__/\:\/\//g' | sed 's/_/\./g'  >> $(pwd)/urls_to_scan.txt
+gf default_server | sed 's/com__.*/com/' | sed 's/__/\:\/\//g' | sed 's/_/\./g'  >> $(pwd)/urls_to_scan.txt
+cd -
+
 echo "Done"
 exit
